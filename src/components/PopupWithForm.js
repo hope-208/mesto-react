@@ -9,6 +9,27 @@ function PopupWithForm({
   button,
   children,
 }) {
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    function handleESC(evt) {
+      if (evt.key === 'Escape') {
+        onClose();
+      }
+    }
+    function handleOverlayClose(evt) {
+      evt.target.classList.contains('popup_opened') && onClose();
+    }
+
+    document.addEventListener('keydown', handleESC);
+    document.addEventListener('mousedown', handleOverlayClose);
+
+    return () => {
+      document.removeEventListener('keydown', handleOverlayClose);
+      document.removeEventListener('mousedown', handleESC);
+    };
+  }, [isOpen]);
+
   return (
     <section className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`}>
       <div className={`popup__${container}`}>

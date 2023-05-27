@@ -1,6 +1,27 @@
 import React from 'react';
 
-function ImagePopup({ onClose, card }) {
+function ImagePopup({ isOpen, onClose, card }) {
+  React.useEffect(() => {
+    if (!`${card && 'popup_opened'}`) return;
+
+    function handleESC(evt) {
+      if (evt.key === 'Escape') {
+        onClose();
+      }
+    }
+    function handleOverlayClose(evt) {
+      evt.target.classList.contains('popup_opened') && onClose();
+    }
+
+    document.addEventListener('keydown', handleESC);
+    document.addEventListener('mousedown', handleOverlayClose);
+
+    return () => {
+      document.removeEventListener('keydown', handleOverlayClose);
+      document.removeEventListener('mousedown', handleESC);
+    };
+  }, [`${card && 'popup_opened'}`]);
+
   return (
     <section
       className={`popup popup_zoom ${card && 'popup_opened'}`}

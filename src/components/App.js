@@ -8,8 +8,6 @@ import EditProfilePopup from './EditProfilePopup.js';
 import AddPhotoPopup from './AddPhotoPopup.js';
 import ImagePopup from './ImagePopup.js';
 
-import '../index.css';
-
 function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
@@ -39,24 +37,6 @@ function App() {
     setAddPlacePopupOpen(false);
     setSelectedCard(null);
   }
-
-  React.useEffect(() => {
-    function handleEscClose(evt) {
-      evt.key === 'Escape' && closeAllPopups();
-    }
-
-    function handleOverlayClose(evt) {
-      evt.target.classList.contains('popup_opened') && closeAllPopups();
-    }
-
-    document.addEventListener('keydown', handleEscClose);
-    document.addEventListener('mousedown', handleOverlayClose);
-
-    return () => {
-      document.removeEventListener('click', handleOverlayClose);
-      document.removeEventListener('mousedown', handleEscClose);
-    };
-  }, []);
 
   return (
     <>
