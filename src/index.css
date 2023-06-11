@@ -13,6 +13,7 @@
 @import url(./blocks/button/button-submit.css);
 @import url(./blocks/button/button-like.css);
 @import url(./blocks/button/_active/button-like_active.css);
+@import url(./blocks/button/_active/button-delete_active.css);
 @import url(./blocks/button/_disabled/button-submit_disabled.css);
 
 @import url(./blocks/header/header.css);

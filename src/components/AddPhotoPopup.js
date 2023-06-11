@@ -1,7 +1,27 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm.js';
 
-function AddPhotoPopup({ isOpen, onClose }) {
+function AddPhotoPopup({ isOpen, onClose, onAddPlace, isLoading }) {
+  const [name, setName] = React.useState('');
+  const [link, setLink] = React.useState('');
+
+  function handleAddPlaceName(evt) {
+    setName(evt.target.value);
+  }
+
+  function handleAddPlaceLink(evt) {
+    setLink(evt.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    onAddPlace({ name, link }, () => {
+      setName('');
+      setLink('');
+    });
+  }
+
   return (
     <PopupWithForm
       name="add-photo"
@@ -9,17 +29,20 @@ function AddPhotoPopup({ isOpen, onClose }) {
       container="container"
       isOpen={isOpen}
       onClose={onClose}
-      button="Создать"
+      button={isLoading ? 'Сохранение...' : 'Создать'}
+      onSubmit={handleSubmit}
     >
       <label className="form__label">
         <input
           className="form__input form__input_photo-title"
           type="text"
-          name="title"
-          id="title"
+          name="name"
+          id="name"
           placeholder="Название"
           minLength="2"
           maxLength="30"
+          value={name}
+          onChange={handleAddPlaceName}
           required
         />
         <span className="error title-error"></span>
@@ -31,6 +54,8 @@ function AddPhotoPopup({ isOpen, onClose }) {
           name="link"
           id="link"
           placeholder="Ссылка на картинку"
+          value={link}
+          onChange={handleAddPlaceLink}
           required
         />
         <span className="error link-error"></span>

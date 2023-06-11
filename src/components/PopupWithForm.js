@@ -8,28 +8,8 @@ function PopupWithForm({
   onClose,
   button,
   children,
+  onSubmit,
 }) {
-  React.useEffect(() => {
-    if (!isOpen) return;
-
-    function handleESC(evt) {
-      if (evt.key === 'Escape') {
-        onClose();
-      }
-    }
-    function handleOverlayClose(evt) {
-      evt.target.classList.contains('popup_opened') && onClose();
-    }
-
-    document.addEventListener('keydown', handleESC);
-    document.addEventListener('mousedown', handleOverlayClose);
-
-    return () => {
-      document.removeEventListener('keydown', handleOverlayClose);
-      document.removeEventListener('mousedown', handleESC);
-    };
-  }, [isOpen]);
-
   return (
     <section className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`}>
       <div className={`popup__${container}`}>
@@ -44,6 +24,7 @@ function PopupWithForm({
           className={`form form_${name}`}
           name={`${name}`}
           id={`${name}`}
+          onSubmit={onSubmit}
           noValidate
         >
           <h2 className="popup__title">{title}</h2>
@@ -52,7 +33,7 @@ function PopupWithForm({
             className={`button-submit button-submit_${name} button-submit_disabled`}
             type="submit"
             form={`${name}`}
-            disabled
+            onSubmit={onSubmit}
           >
             {button}
           </button>

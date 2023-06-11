@@ -20,7 +20,7 @@ class Api {
     });
   }
 
-  getMyProfile() {
+  getProfileInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
     }).then((res) => {
@@ -41,12 +41,12 @@ class Api {
     });
   }
 
-  addPhoto({ title, link }) {
+  addPhoto({ name, link }) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        name: title,
+        name,
         link: link,
       }),
     }).then((res) => {
@@ -54,18 +54,9 @@ class Api {
     });
   }
 
-  setLike(cardId) {
+  changeLike(cardId, isLiked) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'PUT',
-      headers: this._headers,
-    }).then((res) => {
-      return this._checkResponse(res);
-    });
-  }
-
-  deleteLike(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'DELETE',
+      method: isLiked ? 'DELETE' : 'PUT',
       headers: this._headers,
     }).then((res) => {
       return this._checkResponse(res);
@@ -81,11 +72,11 @@ class Api {
     });
   }
 
-  editMyAvatar(avatar) {
+  editMyAvatar(data) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
-      body: JSON.stringify({ avatar: avatar }),
+      body: JSON.stringify({ avatar: data.avatar }),
     }).then((res) => {
       return this._checkResponse(res);
     });
