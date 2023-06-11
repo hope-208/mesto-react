@@ -1,9 +1,14 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm.js';
 
 function AddPhotoPopup({ isOpen, onClose, onAddPlace, isLoading }) {
-  const [name, setName] = React.useState('');
-  const [link, setLink] = React.useState('');
+  const [name, setName] = useState('');
+  const [link, setLink] = useState('');
+
+  useEffect(() => {
+    setName('');
+    setLink('');
+  }, [onClose]);
 
   function handleAddPlaceName(evt) {
     setName(evt.target.value);

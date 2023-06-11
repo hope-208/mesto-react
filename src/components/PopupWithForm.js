@@ -28,12 +28,11 @@ function PopupWithForm({
           id={`${name}`}
           onSubmit={onSubmit}
           card={card}
-          noValidate
         >
           <h2 className={popupTitle}>{title}</h2>
           {children}
           <button
-            className={`button-submit button-submit_${name} button-submit_disabled`}
+            className={`button-submit button-submit_${name}`}
             type="submit"
             form={`${name}`}
           >

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import api from '../utils/Api.js';
 import Header from './Header.js';
 import Main from './Main.js';
@@ -11,11 +11,17 @@ import ImagePopup from './ImagePopup.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
 function App() {
-  const [currentUser, setCurrentUser] = React.useState({});
-  const [cards, setCards] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
+  const [deleteCard, setDeleteCard] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     api
       .getProfileInfo()
       .then((data) => {
@@ -39,6 +45,7 @@ function App() {
         closeAllPopups();
       }
     }
+
     function handleOverlayClose(evt) {
       evt.target.classList.contains('popup_opened') && closeAllPopups();
     }
@@ -51,14 +58,6 @@ function App() {
       document.removeEventListener('mousedown', handleESC);
     };
   }, []);
-
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
-    React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState(null);
-  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
-  const [isDeletePopupOpen, setDeletePopupOpen] = React.useState(false);
-  const [deleteCard, setDeleteCard] = React.useState(null);
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -87,29 +86,28 @@ function App() {
       .editMyProfile({ name, about })
       .then((data) => {
         setCurrentUser(data);
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        closeAllPopups();
         setIsLoading(false);
       });
   }
 
-  function handleUpdateAvatar({ avatar }, onSuccess) {
+  function handleUpdateAvatar({ avatar }) {
     setIsLoading(true);
     api
       .editMyAvatar({ avatar })
       .then((data) => {
         setCurrentUser(data);
-        onSuccess();
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        closeAllPopups();
         setIsLoading(false);
       });
   }
@@ -117,9 +115,16 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    api.changeLike(card._id, isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
+    api
+      .changeLike(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((c) => (c._id === card._id ? newCard : c))
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function handleAddPlaceSubmit({ name, link }, onSuccess) {
@@ -129,28 +134,29 @@ function App() {
       .then((newCard) => {
         setCards([newCard, ...cards]);
         onSuccess();
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        closeAllPopups();
         setIsLoading(false);
       });
   }
 
-  function handleCardDelete() {
+  function handleCardDelete(evt) {
+    evt.preventDefault();
     setIsLoading(true);
     api
       .deleteCard(deleteCard._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== deleteCard._id));
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        closeAllPopups();
         setIsLoading(false);
       });
   }

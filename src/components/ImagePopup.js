@@ -13,13 +13,9 @@ function ImagePopup({ onClose, card }) {
           onClick={onClose}
         ></button>
         <figure className="popup__zoom-photo">
-          <img
-            className="popup__photo"
-            src={card ? card.link : ''}
-            alt={card ? card.name : ''}
-          />
+          <img className="popup__photo" src={card?.link} alt={card?.name} />
           <figcaption className="popup__zoom-title">
-            <p className="popup__photo-title">{card ? card.name : ''}</p>
+            <p className="popup__photo-title">{card?.name}</p>
           </figcaption>
         </figure>
       </div>
