@@ -26,6 +26,7 @@ function AddPhotoPopup({ isOpen, onClose, onAddPlace, isLoading }) {
     <PopupWithForm
       name="add-photo"
       title="Новое место"
+      popupTitle="popup__title"
       container="container"
       isOpen={isOpen}
       onClose={onClose}

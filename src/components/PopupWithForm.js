@@ -3,6 +3,8 @@ import React from 'react';
 function PopupWithForm({
   name,
   title,
+  card,
+  popupTitle,
   container,
   isOpen,
   onClose,
@@ -25,15 +27,15 @@ function PopupWithForm({
           name={`${name}`}
           id={`${name}`}
           onSubmit={onSubmit}
+          card={card}
           noValidate
         >
-          <h2 className="popup__title">{title}</h2>
+          <h2 className={popupTitle}>{title}</h2>
           {children}
           <button
             className={`button-submit button-submit_${name} button-submit_disabled`}
             type="submit"
             form={`${name}`}
-            onSubmit={onSubmit}
           >
             {button}
           </button>

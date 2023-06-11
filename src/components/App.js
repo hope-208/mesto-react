@@ -57,6 +57,8 @@ function App() {
     React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
+  const [isDeletePopupOpen, setDeletePopupOpen] = React.useState(false);
+  const [deleteCard, setDeleteCard] = React.useState(null);
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -72,6 +74,11 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card);
+  }
+
+  function handleDeleteClick(card) {
+    setDeletePopupOpen(true);
+    setDeleteCard(card);
   }
 
   function handleUpdateUser({ name, about }) {
@@ -132,14 +139,19 @@ function App() {
       });
   }
 
-  function handleCardDelete(card) {
+  function handleCardDelete() {
+    setIsLoading(true);
     api
-      .deleteCard(card._id)
+      .deleteCard(deleteCard._id)
       .then(() => {
-        setCards((state) => state.filter((c) => c._id !== card._id));
+        setCards((state) => state.filter((c) => c._id !== deleteCard._id));
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        closeAllPopups();
+        setIsLoading(false);
       });
   }
 
@@ -148,6 +160,8 @@ function App() {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setSelectedCard(null);
+    setDeletePopupOpen(false);
+    setDeleteCard(null);
   }
 
   return (
@@ -161,7 +175,7 @@ function App() {
         onAddPlace={handleAddPlaceClick}
         onCardClick={handleCardClick}
         onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
+        onCardDelete={handleDeleteClick}
       />
 
       <Footer />
@@ -188,9 +202,13 @@ function App() {
       <PopupWithForm
         name="delete"
         title="Вы уверены?"
+        card={deleteCard}
+        popupTitle="popup__title-delete"
         container="delete-container"
+        isOpen={isDeletePopupOpen}
         onClose={closeAllPopups}
-        button="Да"
+        button={isLoading ? 'Сохранение...' : 'Да'}
+        onSubmit={handleCardDelete}
       ></PopupWithForm>
     </CurrentUserContext.Provider>
   );
